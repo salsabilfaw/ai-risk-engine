@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>User Management</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: #0f172a;
+    color: white;
+}
+
+.container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 30px;
+}
+
+.card {
+    background: #1e293b;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 10px;
+    border-bottom: 1px solid #334155;
+    text-align: left;
+}
+
+input, select {
+    padding: 8px;
+    border-radius: 6px;
+    border: none;
+    margin-right: 5px;
+}
+
+button {
+    padding: 8px 12px;
+    background: #3b82f6;
+    border: none;
+    border-radius: 6px;
+    color: white;
+}
+
+.nav a {
+    margin-right: 10px;
+    text-decoration: none;
+    color: white;
+    background: #334155;
+    padding: 6px 10px;
+    border-radius: 6px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="nav">
+        <a href="/">Home</a>
+        <a href="/admin">Upload</a>
+        <a href="/audit">Audit</a>
+        <a href="/logout">Logout</a>
+    </div>
+
+    <div class="card">
+        <h2>Tambah User</h2>
+
+        <form action="/add_user" method="POST">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+
+            <select name="role">
+                <option value="admin">Admin</option>
+                <option value="user">User</option>
+            </select>
+
+            <button type="submit">Tambah</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h2>Daftar User</h2>
+
+        <table>
+            <tr>
+                <th>Username</th>
+                <th>Role</th>
+            </tr>
+
+            {% for u in data %}
+            <tr>
+                <td>{{ u.username }}</td>
+                <td>{{ u.role }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+</div>
+
+</body>
+</html>

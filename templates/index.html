@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>AI Risk Engine</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial;
+    background: #0f172a;
+    color: white;
+}
+
+/* LAYOUT */
+.wrapper {
+    display: flex;
+    height: 100vh;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 260px;
+    background: #020617;
+    padding: 20px;
+    overflow-y: auto;
+    border-right: 1px solid #1e293b;
+}
+
+.sidebar h3 {
+    margin-bottom: 15px;
+}
+
+.history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #1e293b;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.history-item:hover {
+    background: #334155;
+}
+
+/* MAIN */
+.main {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+}
+
+/* NAV */
+.nav {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.nav a {
+    color: white;
+    text-decoration: none;
+    background: #334155;
+    padding: 8px 12px;
+    border-radius: 6px;
+    margin-left: 10px;
+}
+
+/* SEARCH */
+.search-box {
+    background: #1e293b;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+}
+
+button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background: #3b82f6;
+    border: none;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* RESULT */
+.card {
+    background: #1e293b;
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 10px;
+}
+
+.high { color: #ef4444; }
+.medium { color: #f59e0b; }
+.low { color: #22c55e; }
+
+.badge {
+    font-size: 12px;
+    background: #334155;
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrapper">
+
+    <!-- SIDEBAR -->
+   <div class="sidebar">
+    <h3>Recent</h3>
+
+    <a href="/clear_history" style="font-size:12px; color:#ef4444;">
+        Clear All
+    </a>
+
+    {% for h in history %}
+    <div class="history-item">
+
+        <span onclick="fillSearch('{{ h[1] }}')" style="flex:1;">
+            {{ h[1] }}
+        </span>
+
+        <a href="/delete_history/{{ h[0] }}"
+           style="color:red; margin-left:10px; text-decoration:none;">
+           ✕
+        </a>
+
+    </div>
+    {% endfor %}
+</div>
+
+    <!-- MAIN -->
+    <div class="main">
+
+        <!-- NAV -->
+        <div class="nav">
+            <div><b>AI Risk Engine</b></div>
+
+            <div>
+                <a href="/">Home</a>
+                <a href="/dashboard">Dashboard</a>
+
+                {% if role == 'admin' %}
+                <a href="/admin">Upload</a>
+                <a href="/users">Users</a>
+                <a href="/audit">Audit</a>
+                {% endif %}
+
+                <a href="/logout">Logout</a>
+            </div>
+        </div>
+
+        <!-- SEARCH -->
+        <div class="search-box">
+            <form method="POST">
+                <input type="text" name="process" placeholder="Masukkan proses bisnis..." required>
+                <button type="submit">Analisa</button>
+            </form>
+        </div>
+
+        <!-- RESULT -->
+        {% for r in results %}
+        <div class="card">
+            <b>{{ r.risk }}</b><br>
+            {{ r.impact }}<br><br>
+
+            <span class="badge">{{ r.category }}</span><br><br>
+
+            Score: {{ r.risk_score }} |
+            <span class="
+                {% if r.level == 'High' %}high
+                {% elif r.level == 'Medium' %}medium
+                {% else %}low
+                {% endif %}
+            ">
+                {{ r.level }}
+            </span>
+        </div>
+        {% endfor %}
+
+    </div>
+
+</div>
+<a href="/export_excel">
+    <button>Download Excel</button>
+</a>
+<!-- JS -->
+<script>
+function fillSearch(text) {
+    document.querySelector('input[name="process"]').value = text;
+}
+</script>
+
+</body>
+</html>

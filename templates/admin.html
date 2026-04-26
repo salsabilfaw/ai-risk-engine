@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Admin Upload</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: #0f172a;
+    color: white;
+    margin: 0;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+    padding: 30px;
+}
+
+.card {
+    background: #1e293b;
+    padding: 25px;
+    border-radius: 12px;
+    margin-top: 20px;
+}
+
+h2 {
+    margin-bottom: 10px;
+}
+
+.upload-box {
+    border: 2px dashed #3b82f6;
+    padding: 30px;
+    text-align: center;
+    border-radius: 10px;
+}
+
+input[type="file"] {
+    margin-top: 15px;
+}
+
+button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    border: none;
+    background: #22c55e;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.nav {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.nav a {
+    color: white;
+    text-decoration: none;
+    background: #334155;
+    padding: 8px 12px;
+    border-radius: 8px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="nav">
+        <a href="/">Home</a>
+        <a href="/users">Users</a>
+        <a href="/audit">Audit</a>
+        <a href="/logout">Logout</a>
+    </div>
+
+    <div class="card">
+        <h2>Upload Risk Data</h2>
+        <p>Upload file Excel (.xlsx) dengan format yang sesuai</p>
+
+        <form action="/upload" method="POST" enctype="multipart/form-data">
+            <div class="upload-box">
+                <p>Drag & Drop atau pilih file</p>
+                <input type="file" name="file" required>
+            </div>
+
+            <button type="submit">Upload</button>
+        </form>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Audit Trail</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: #0f172a;
+    color: white;
+}
+
+.container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 30px;
+}
+
+.card {
+    background: #1e293b;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.nav a {
+    margin-right: 10px;
+    text-decoration: none;
+    color: white;
+    background: #334155;
+    padding: 6px 10px;
+    border-radius: 6px;
+}
+
+.timestamp {
+    font-size: 12px;
+    color: #94a3b8;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="nav">
+        <a href="/">Home</a>
+        <a href="/admin">Upload</a>
+        <a href="/users">Users</a>
+        <a href="/logout">Logout</a>
+    </div>
+
+    <h2>Audit Trail</h2>
+
+    {% for log in logs %}
+    <div class="card">
+        <b>{{ log.username }}</b> - {{ log.action }}
+        <div class="timestamp">{{ log.timestamp }}</div>
+    </div>
+    {% endfor %}
+
+</div>
+
+</body>
+</html>

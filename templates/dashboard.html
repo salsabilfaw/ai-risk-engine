@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Dashboard</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body { font-family: Arial; background: #0f172a; color: white; margin: 0; }
+
+.navbar {
+    background: #1e293b;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.navbar a {
+    color: white;
+    margin-left: 10px;
+    text-decoration: none;
+    background: #334155;
+    padding: 8px;
+    border-radius: 6px;
+}
+
+.container { max-width: 1100px; margin: auto; padding: 30px; }
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.metric {
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.total { background: #1e40af; }
+.high { background: #7f1d1d; }
+.medium { background: #78350f; }
+.low { background: #064e3b; }
+
+.card {
+    background: #1e293b;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+form input, form select {
+    padding: 8px;
+    margin-right: 10px;
+    border-radius: 6px;
+    border: none;
+}
+
+form button {
+    padding: 8px 15px;
+    background: #3b82f6;
+    border: none;
+    color: white;
+    border-radius: 6px;
+}
+ul {
+    padding-left: 20px;
+}
+
+li {
+    margin-bottom: 8px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="navbar">
+    <div><b>Dashboard</b></div>
+
+    <div>
+        <a href="/">Home</a>
+        <a href="/dashboard">Dashboard</a>
+
+        {% if role == 'admin' %}
+        <a href="/admin">Upload</a>
+        <a href="/users">Users</a>
+        <a href="/audit">Audit</a>
+        {% endif %}
+
+        <a href="/logout">Logout</a>
+    </div>
+</div>
+<div class="card">
+    <h3>Filter Dashboard</h3>
+
+    <form method="GET">
+        <input type="date" name="start_date">
+        <input type="date" name="end_date">
+
+        <select name="username">
+            <option value="">All User</option>
+            {% for u in users %}
+            <option value="{{ u }}">{{ u }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="level">
+            <option value="">All Level</option>
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+        </select>
+
+        <button type="submit">Apply Filter</button>
+    </form>
+</div>
+<div class="container">
+
+<div class="grid">
+    <div class="metric total">Total<br><h2>{{ total }}</h2></div>
+    <div class="metric high">High<br><h2>{{ high }}</h2></div>
+    <div class="metric medium">Medium<br><h2>{{ medium }}</h2></div>
+    <div class="metric low">Low<br><h2>{{ low }}</h2></div>
+</div>
+<div class="card">
+    <h3>Top 5 Proses Paling Dianalisa</h3>
+
+    <ul>
+        {% for p in top_process %}
+        <li>{{ p[0] }} ({{ p[1] }})</li>
+        {% endfor %}
+    </ul>
+</div>
+<div class="card">
+    <h3>Top 5 Risiko Paling Sering Muncul</h3>
+
+    <ul>
+        {% for r in top_risk %}
+        <li>{{ r[0] }} ({{ r[1] }})</li>
+        {% endfor %}
+    </ul>
+</div>
+<div class="card">
+    <h3>Risk Level</h3>
+    <canvas id="pieChart"></canvas>
+</div>
+
+<div class="card">
+    <h3>Category</h3>
+    <canvas id="barChart"></canvas>
+</div>
+
+<!-- 🔥 DATA DISIMPAN DI HTML -->
+<div id="data"
+     data-high="{{ high }}"
+     data-medium="{{ medium }}"
+     data-low="{{ low }}"
+     data-categories='{{ categories | tojson }}'>
+</div>
+
+</div>
+
+<script>
+const el = document.getElementById("data");
+
+const high = parseInt(el.dataset.high);
+const medium = parseInt(el.dataset.medium);
+const low = parseInt(el.dataset.low);
+
+const categories = JSON.parse(el.dataset.categories);
+
+// PIE
+new Chart(document.getElementById('pieChart'), {
+    type: 'pie',
+    data: {
+        labels: ['High', 'Medium', 'Low'],
+        datasets: [{
+            data: [high, medium, low]
+        }]
+    }
+});
+
+// BAR
+new Chart(document.getElementById('barChart'), {
+    type: 'bar',
+    data: {
+        labels: Object.keys(categories),
+        datasets: [{
+            label: 'Risk',
+            data: Object.values(categories)
+        }]
+    }
+});
+</script>
+
+</body>
+</html>
