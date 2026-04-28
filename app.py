@@ -18,14 +18,19 @@ bcrypt = Bcrypt(app)
 # DB CONNECTION
 # ======================
 import os
+import psycopg2
 
 def get_db():
-    return psycopg2.connect(
-        host=os.getenv("DB_HOST"),
-        database=os.getenv("DB_NAME"),
-        user=os.getenv("DB_USER"),
-        password=os.getenv("DB_PASS")
-    )
+    db_url = os.getenv("DATABASE_URL")
+
+    if not db_url:
+        raise Exception("DATABASE_URL tidak ditemukan")
+
+    # fix untuk Render (kadang masih postgres://)
+    if db_url.startswith("postgres://"):
+        db_url = db_url.replace("postgres://", "postgresql://", 1)
+
+    return psycopg2.connect(db_url, sslmode="require")
 
 # ======================
 # MODEL LOAD
