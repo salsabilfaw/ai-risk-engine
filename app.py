@@ -20,7 +20,7 @@ bcrypt = Bcrypt(app)
 import os
 import psycopg2
 
-ddef get_db():
+def get_db():
     db_url = os.getenv("DATABASE_URL")
 
     if db_url:
